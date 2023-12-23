@@ -42,7 +42,7 @@ class Parser:
         try:
             self.driver.get(url)
             row_class_name = 'ant-table-row'
-            _ = WebDriverWait(self.driver, 30).until(ec.presence_of_element_located((By.CLASS_NAME, row_class_name)))
+            _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, row_class_name)))
             last_row_obj = self.driver.find_element(By.CLASS_NAME, value=row_class_name)
             last_row_href = last_row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
             return last_row_href
