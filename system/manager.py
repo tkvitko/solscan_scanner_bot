@@ -44,6 +44,8 @@ class LinksManager:
         """
         for link, old_data in self.links.items():
             new_data = self.parser.get_from_url(url=link)
+            logger.debug(f'Old data is {old_data}')
+            logger.debug(f'New data is {new_data}')
             self.links[link] = new_data
             if old_data is not None and old_data != new_data:
                 self.messenger.send_message_to_telegram(

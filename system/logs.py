@@ -10,5 +10,5 @@ handler = handlers.TimedRotatingFileHandler(filename=os.path.join(LOG_DIR, 'scan
                                             interval=1,
                                             backupCount=2)
 handler.setFormatter(log_format)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
