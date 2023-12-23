@@ -48,3 +48,9 @@ class Parser:
             return last_row_href
         except Exception as e:
             logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
+
+
+if __name__ == '__main__':
+    parser = Parser()
+    print(parser.get_from_url('https://solscan.io/account/BQJoDFBsvETyRjPvtLoRu6wzNiwz7SScXL8ZLpjm8sfZ#splTransfers'))
+
