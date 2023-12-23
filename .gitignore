@@ -2,3 +2,5 @@ logs/*
 sessions/*
 links.txt
 config.ini
+system/__pycache__
+.idea/
