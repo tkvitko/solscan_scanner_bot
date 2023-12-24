@@ -22,7 +22,7 @@ class Parser:
         chrome_options.add_argument('enable-features=NetworkServiceInProcess')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
-        # chrome_options.add_argument('headless')
+        chrome_options.add_argument('headless')
 
         max_attempts = 5
         timeout = 60
