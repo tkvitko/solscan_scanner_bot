@@ -43,14 +43,15 @@ class LinksManager:
         :return:
         """
         for link, old_data in self.links.items():
-            new_data = self.parser.get_from_url(url=link)
+            new_data, new_amount_text = self.parser.get_from_url(url=link)
             # new_data = self.parser.stub_get_from_url(url=link)
             logger.debug(f'Old data is {old_data}')
             logger.debug(f'New data is {new_data}')
             self.links[link] = new_data
             if old_data is not None and new_data is not None and old_data != new_data:
+            # if old_data != new_data:
                 self.messenger.send_message_to_telegram(
-                    f'New transaction on {link}:\n\n[Transaction Details]({new_data})')
+                    f'New transaction on {link}:\n\n[Transaction Details]({new_data}) {new_amount_text}')
                 logger.debug(f'Data {new_data} for link {link} has been sent to telegram')
         logger.debug(f'{len(self.links)} links has been parsed')
 

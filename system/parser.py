@@ -39,7 +39,7 @@ class Parser:
                 attempt += 1
                 sleep(timeout)
 
-    def get_from_url(self, url: str) -> str:
+    def get_from_url(self, url: str) -> (str, str):
         try:
             if self.driver.current_url == url:
                 self.driver.refresh()
@@ -57,7 +57,11 @@ class Parser:
             spl_table = tables[1]
             last_row_obj = spl_table.find_element(By.CLASS_NAME, value=row_class_name)
             last_row_href = last_row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
-            return last_row_href
+            last_row_cells = last_row_obj.find_elements(By.CLASS_NAME, 'ant-table-cell')
+            amount_cell = last_row_cells[-1]
+            amount_text = amount_cell.text.replace('\n', '')
+
+            return last_row_href, amount_text
         except Exception as e:
             logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
 
