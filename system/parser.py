@@ -1,3 +1,4 @@
+import random
 from time import sleep
 
 from selenium import webdriver
@@ -21,7 +22,7 @@ class Parser:
         chrome_options.add_argument('enable-features=NetworkServiceInProcess')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument('headless')
+        # chrome_options.add_argument('headless')
 
         max_attempts = 5
         timeout = 60
@@ -38,19 +39,33 @@ class Parser:
                 attempt += 1
                 sleep(timeout)
 
-    def get_from_url(self, url: str):
+    def get_from_url(self, url: str) -> str:
         try:
-            self.driver.get(url)
+            if self.driver.current_url == url:
+                self.driver.refresh()
+            else:
+                self.driver.get(url)
+
             row_class_name = 'ant-table-row'
-            _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, row_class_name)))
-            last_row_obj = self.driver.find_element(By.CLASS_NAME, value=row_class_name)
+            # _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, row_class_name)))
+            # _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.ID, 'rc-tabs-0-tab-splTransfers')))
+            _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, 'ant-table-tbody')))
+            # row_objs = self.driver.find_elements(By.CLASS_NAME, value=row_class_name)
+            # last_row_obj = row_objs[0]
+
+            tables = self.driver.find_elements(By.CLASS_NAME, value='ant-table-tbody')
+            spl_table = tables[1]
+            last_row_obj = spl_table.find_element(By.CLASS_NAME, value=row_class_name)
             last_row_href = last_row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
             return last_row_href
         except Exception as e:
             logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
 
+    @staticmethod
+    def stub_get_from_url(url: str):
+        return random.randint(1, 10)
+
 
 if __name__ == '__main__':
     parser = Parser()
     print(parser.get_from_url('https://solscan.io/account/BQJoDFBsvETyRjPvtLoRu6wzNiwz7SScXL8ZLpjm8sfZ#splTransfers'))
-

@@ -1,0 +1,2 @@
+2023-12-24 09:51:21,096 parser CRITICAL Cant parse https://solscan.io/account/BQJoDFBsvETyRjPvtLoRu6wzNiwz7SScXL8ZLpjm8sfZ#splTransfers: list index out of range - IndexError
+2023-12-24 09:57:11,457 parser CRITICAL Cant parse https://solscan.io/account/BQJoDFBsvETyRjPvtLoRu6wzNiwz7SScXL8ZLpjm8sfZ#splTransfers: list index out of range - IndexError
