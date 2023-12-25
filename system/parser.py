@@ -40,7 +40,7 @@ class Parser:
                 sleep(timeout)
 
     def get_from_url(self, url: str) -> (str, str):
-        try:
+        # try:
             if self.driver.current_url == url:
                 self.driver.refresh()
             else:
@@ -62,8 +62,8 @@ class Parser:
             amount_text = amount_cell.text.replace('\n', '')
 
             return last_row_href, amount_text
-        except Exception as e:
-            logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
+        # except Exception as e:
+        #     logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
 
     @staticmethod
     def stub_get_from_url(url: str):
