@@ -9,10 +9,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
+from system.cookies import load_cookies
+from system.logs import logger
+
 
 class Parser:
     def __init__(self):
         self._init_webdriver()
+        # self._load_cookies()
+        self._login()
+        print(1)
 
     def _init_webdriver(self):
         chrome_options = Options()
@@ -21,7 +27,7 @@ class Parser:
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument('headless')
+        # chrome_options.add_argument('headless')
 
         max_attempts = 5
         timeout = 60
@@ -38,26 +44,44 @@ class Parser:
                 attempt += 1
                 sleep(timeout)
 
+    def _load_cookies(self) -> None:
+        """
+        Загрузка cookies из файла в driver
+        :return: None
+        """
+
+        cookies_list = load_cookies()
+        self.driver.get('https://solscan.io/')
+        for cookie in cookies_list:
+            print(cookie)
+            if cookie['domain'] == '.solscan.io':
+                self.driver.add_cookie(cookie)
+
+    def _login(self) -> None:
+        self.driver.get('https://solscan.io/user/signin')
+        _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.ID, 'email')))
+        login_field = self.driver.find_element(By.ID, value='email')
+        login_field.send_keys('tkvitko@gmail.com')
+        password_field = self.driver.find_element(By.ID, value='password')
+        password_field.send_keys('L42&#q8mX&J&br$')
+        button_submit = self.driver.find_element(By.CLASS_NAME, value='ant-btn')
+        button_submit.click()
+
     def get_from_url(self, url: str) -> (str, str):
-        # try:
+        try:
             if self.driver.current_url == url:
                 self.driver.refresh()
             else:
                 self.driver.get(url)
 
             row_class_name = 'ant-table-row'
-            # _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, row_class_name)))
-            # _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.ID, 'rc-tabs-0-tab-splTransfers')))
-            sleep(10)
-            self.driver.save_screenshot('screen.jpg')
+            # sleep(10)
+            # self.driver.save_screenshot('screen.jpg')
             _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, 'ant-table-tbody')))
-
-            self.driver.save_screenshot('screen2.jpg')
-            # row_objs = self.driver.find_elements(By.CLASS_NAME, value=row_class_name)
-            # last_row_obj = row_objs[0]
+            # self.driver.save_screenshot('screen2.jpg')
 
             tables = self.driver.find_elements(By.CLASS_NAME, value='ant-table-tbody')
-            spl_table = tables[1]
+            spl_table = tables[1] if len(tables) > 1 else tables[0]
             last_row_obj = spl_table.find_element(By.CLASS_NAME, value=row_class_name)
             last_row_href = last_row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
             last_row_cells = last_row_obj.find_elements(By.CLASS_NAME, 'ant-table-cell')
@@ -65,8 +89,8 @@ class Parser:
             amount_text = amount_cell.text.replace('\n', '')
 
             return last_row_href, amount_text
-        # except Exception as e:
-        #     logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
+        except Exception as e:
+            logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
 
     @staticmethod
     def stub_get_from_url(url: str):
