@@ -9,8 +9,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from system.logs import logger
-
 
 class Parser:
     def __init__(self):
@@ -22,6 +20,7 @@ class Parser:
         chrome_options.add_argument('enable-features=NetworkServiceInProcess')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument('headless')
 
         max_attempts = 5
@@ -49,7 +48,11 @@ class Parser:
             row_class_name = 'ant-table-row'
             # _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, row_class_name)))
             # _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.ID, 'rc-tabs-0-tab-splTransfers')))
+            sleep(10)
+            self.driver.save_screenshot('screen.jpg')
             _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, 'ant-table-tbody')))
+
+            self.driver.save_screenshot('screen2.jpg')
             # row_objs = self.driver.find_elements(By.CLASS_NAME, value=row_class_name)
             # last_row_obj = row_objs[0]
 
