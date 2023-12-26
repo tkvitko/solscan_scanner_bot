@@ -18,7 +18,6 @@ class Parser:
         self._init_webdriver()
         # self._load_cookies()
         self._login()
-        print(1)
 
     def _init_webdriver(self):
         chrome_options = Options()
@@ -77,11 +76,14 @@ class Parser:
             row_class_name = 'ant-table-row'
             # sleep(10)
             # self.driver.save_screenshot('screen.jpg')
-            _ = WebDriverWait(self.driver, 60).until(ec.presence_of_element_located((By.CLASS_NAME, 'ant-table-tbody')))
+            _ = WebDriverWait(self.driver, 90).until(ec.presence_of_element_located((By.CLASS_NAME, 'ant-table-tbody')))
             # self.driver.save_screenshot('screen2.jpg')
 
             tables = self.driver.find_elements(By.CLASS_NAME, value='ant-table-tbody')
-            spl_table = tables[1] if len(tables) > 1 else tables[0]
+            try:
+                spl_table = tables[1]# if len(tables) > 1 else tables[0]
+            except IndexError:
+                return None
             last_row_obj = spl_table.find_element(By.CLASS_NAME, value=row_class_name)
             last_row_href = last_row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
             last_row_cells = last_row_obj.find_elements(By.CLASS_NAME, 'ant-table-cell')
