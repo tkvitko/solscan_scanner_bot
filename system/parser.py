@@ -1,5 +1,6 @@
 import random
 from time import sleep
+from typing import Union, List
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -26,7 +27,7 @@ class Parser:
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument('headless')
+        # chrome_options.add_argument('headless')
 
         max_attempts = 5
         timeout = 60
@@ -66,7 +67,7 @@ class Parser:
         button_submit = self.driver.find_element(By.CLASS_NAME, value='ant-btn')
         button_submit.click()
 
-    def get_from_url(self, url: str) -> (str, str):
+    def get_from_url(self, url: str) -> Union[List | None]:
         try:
             if self.driver.current_url == url:
                 self.driver.refresh()
@@ -74,23 +75,32 @@ class Parser:
                 self.driver.get(url)
 
             row_class_name = 'ant-table-row'
-            # sleep(10)
-            # self.driver.save_screenshot('screen.jpg')
             _ = WebDriverWait(self.driver, 90).until(ec.presence_of_element_located((By.CLASS_NAME, 'ant-table-tbody')))
-            # self.driver.save_screenshot('screen2.jpg')
-
+            sleep(10)
             tables = self.driver.find_elements(By.CLASS_NAME, value='ant-table-tbody')
             try:
-                spl_table = tables[1]# if len(tables) > 1 else tables[0]
+                spl_table = tables[1]  # if len(tables) > 1 else tables[0]
             except IndexError:
                 return None
-            last_row_obj = spl_table.find_element(By.CLASS_NAME, value=row_class_name)
-            last_row_href = last_row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
-            last_row_cells = last_row_obj.find_elements(By.CLASS_NAME, 'ant-table-cell')
-            amount_cell = last_row_cells[-1]
-            amount_text = amount_cell.text.replace('\n', '')
 
-            return last_row_href, amount_text
+            rows = []
+            row_objs = spl_table.find_elements(By.CLASS_NAME, value=row_class_name)
+            for row_obj in row_objs:
+                row_href = row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
+                row_cells = row_obj.find_elements(By.CLASS_NAME, 'ant-table-cell')
+                amount_cell = row_cells[-1]
+                amount_text = amount_cell.text.replace('\n', '')
+                rows.append((row_href, amount_text))
+
+            return rows
+
+            # last_row_obj = spl_table.find_element(By.CLASS_NAME, value=row_class_name)
+            # last_row_href = last_row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
+            # last_row_cells = last_row_obj.find_elements(By.CLASS_NAME, 'ant-table-cell')
+            # amount_cell = last_row_cells[-1]
+            # amount_text = amount_cell.text.replace('\n', '')
+            #
+            # return last_row_href, amount_text
         except Exception as e:
             logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
 
