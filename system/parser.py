@@ -75,9 +75,9 @@ class Parser:
                 self.driver.get(url)
 
             row_class_name = 'ant-table-row'
-            _ = WebDriverWait(self.driver, 90).until(ec.presence_of_element_located((By.CLASS_NAME, 'ant-table-tbody')))
             sleep(10)
             self.driver.save_screenshot('screen.png')
+            _ = WebDriverWait(self.driver, 90).until(ec.presence_of_element_located((By.CLASS_NAME, 'ant-table-tbody')))
             tables = self.driver.find_elements(By.CLASS_NAME, value='ant-table-tbody')
             try:
                 spl_table = tables[1]  # if len(tables) > 1 else tables[0]
