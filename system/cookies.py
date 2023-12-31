@@ -1,14 +1,15 @@
 import os
+from typing import List
 
 
-def load_cookies():
+def load_cookies() -> List:
     cookies_folder = '../cookies'
-    list_cookies = []
+    cookies = []
 
     cookies_files_list = [f for f in os.listdir(cookies_folder) if os.path.isfile(os.path.join(cookies_folder, f))]
-    for cookies_file in cookies_files_list:
 
-        with open(os.path.join(cookies_folder, cookies_file), 'r') as source:
+    for cookies_file in cookies_files_list:
+        with open(os.path.join(cookies_folder, cookies_file), encoding='utf-8') as source:
             cookies = source.read().splitlines()
 
         for cookie in cookies:
@@ -18,7 +19,6 @@ def load_cookies():
 
                 dict_cookie = {}
                 list_val = cookie.split('\t')
-                # print(list_val)
                 if list_val[-1].find(';') == -1:
                     dict_cookie['name'] = list_val[-2]
                     dict_cookie['value'] = list_val[-1]
@@ -27,11 +27,11 @@ def load_cookies():
                     dict_cookie['path'] = list_val[2]
                     # dict_cookie['secure'] = list_val[3]
                 if dict_cookie:
-                    list_cookies.append(dict_cookie)
+                    cookies.append(dict_cookie)
 
-    return list_cookies
+    return cookies
 
 
 if __name__ == '__main__':
+    # test
     print(load_cookies())
-

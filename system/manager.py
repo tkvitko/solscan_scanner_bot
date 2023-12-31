@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import Set
 
 from system.messenger import Messenger
 from system.parser import Parser
@@ -43,23 +43,12 @@ class LinksManager:
         :return:
         """
         for link, old_data in self.links.items():
-            # new_data, new_amount_text = self.parser.get_from_url(url=link)
-            # if new_data:
-            #     logger.debug(f'Old data is {old_data}')
-            #     logger.debug(f'New data is {new_data}')
-            #     self.links[link] = new_data
-            #     if old_data is not None and new_data is not None and old_data != new_data:
-            #     # if old_data != new_data:
-            #         self.messenger.send_message_to_telegram(
-            #             f'New transaction on {link}:\n\n[Transaction Details]({new_data}) {new_amount_text}')
-            #         logger.debug(f'Data {new_data} for link {link} has been sent to telegram')
 
             new_rows: list = self.parser.get_from_url(url=link)
             if new_rows:
 
                 # обновление кеша последней записью:
                 new_data, new_amount_text = new_rows[0]
-                # if old_data is not None and new_data is not None and old_data != new_data:
                 self.links[link] = new_data
 
                 # отправка сообщений по всем новых записям
@@ -68,7 +57,6 @@ class LinksManager:
                     logger.debug(f'New data is {new_data}')
                     if old_data != new_data:
                         if old_data is not None and new_data is not None:
-                        # if old_data != new_data:
                             self.messenger.send_message_to_telegram(
                                 f'New transaction on {link}:\n\n[Transaction Details]({new_data}) {new_amount_text}')
                             logger.debug(f'Data {new_data} for link {link} has been sent to telegram')

@@ -3,7 +3,6 @@ import os
 
 from telethon.sync import TelegramClient
 
-from system.logs import logger
 
 config = configparser.ConfigParser()
 config.read("./config.ini")

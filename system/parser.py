@@ -17,7 +17,6 @@ from system.logs import logger
 class Parser:
     def __init__(self):
         self._init_webdriver()
-        # self._load_cookies()
         self._login()
 
     def _init_webdriver(self):
@@ -95,21 +94,16 @@ class Parser:
 
             return rows
 
-            # last_row_obj = spl_table.find_element(By.CLASS_NAME, value=row_class_name)
-            # last_row_href = last_row_obj.find_element(By.TAG_NAME, value='a').get_attribute('href')
-            # last_row_cells = last_row_obj.find_elements(By.CLASS_NAME, 'ant-table-cell')
-            # amount_cell = last_row_cells[-1]
-            # amount_text = amount_cell.text.replace('\n', '')
-            #
-            # return last_row_href, amount_text
         except Exception as e:
             logger.fatal(f'Cant parse {url}: {e} - {e.__class__.__name__}')
 
     @staticmethod
     def stub_get_from_url(url: str):
+        # testing
         return random.randint(1, 10)
 
 
 if __name__ == '__main__':
+    # testing
     parser = Parser()
     print(parser.get_from_url('https://solscan.io/account/BQJoDFBsvETyRjPvtLoRu6wzNiwz7SScXL8ZLpjm8sfZ#splTransfers'))

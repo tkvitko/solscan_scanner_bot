@@ -1,0 +1,8 @@
+[parser]
+links_filename = links.txt
+timeout_in_secs = 5
+[bot]
+bot_token = your_bot_token
+api_id = your_api_id
+api_hash = your_api_hash
+notification_to = list if telegram users
